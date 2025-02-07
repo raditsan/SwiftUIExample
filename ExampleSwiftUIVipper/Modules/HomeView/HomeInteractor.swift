@@ -11,10 +11,7 @@ class HomeInteractor: HomeInteractorProtocol {
     var presenter: (any HomePresenterProtocol)?
     
     func fetchItems() {
-        let items = [
-            HomeItemEntity(name: "Combine Architect (List, Refresh, Load More)", destination: AnyView(Home4View())),
-            HomeItemEntity(name: "Viper Architect", destination: AnyView(Home2Router.createModule())),
-        ]
+        let items = Modules().list
         presenter?.didFetchItems(items)
     }
 }
