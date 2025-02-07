@@ -11,7 +11,9 @@ import SwiftUI
 struct ExampleSwiftUIVipperApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+//            ContentView()
+            HomeRouter.createModule()
+//            Home2Router.createModule()
         }
     }
 }
