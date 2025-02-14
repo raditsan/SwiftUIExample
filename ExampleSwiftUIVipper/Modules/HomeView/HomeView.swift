@@ -30,7 +30,6 @@ struct HomeView: View {
                 presenter.getItems()
             }
             .navigationTitle("Home")
-            
         }
         
     }

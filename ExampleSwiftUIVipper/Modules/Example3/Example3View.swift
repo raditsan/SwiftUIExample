@@ -9,66 +9,138 @@ import SwiftUI
 
 struct Example3View: View {
     @State private var showAlert = false
-    @State private var showModal = false
+    @State private var showCustomModal = false
     @State private var contextMenuAction: String = "No action selected"
 
     var body: some View {
-        VStack(spacing: 20) {
-            // Button to show Alert
-            Button("Show Alert") {
-                showAlert = true
-            }
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Important Message"),
-                    message: Text("This is an alert!"),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-
-            // Button to show Modal
-            Button("Show Modal") {
-                showModal = true
-            }
-            .sheet(isPresented: $showModal) {
-                ModalView(isPresented: $showModal)
-            }
-
-            // Text with Context Menu
-            Text("Long press me for options\nSelected: \(contextMenuAction)")
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-                .contextMenu {
-                    Button(action: {
-                        contextMenuAction = "Copy selected"
-                    }) {
-                        Label("Copy", systemImage: "doc.on.doc")
-                    }
-
-                    Button(action: {
-                        contextMenuAction = "Share selected"
-                    }) {
-                        Label("Share", systemImage: "square.and.arrow.up")
-                    }
-
-                    Button(action: {
-                        contextMenuAction = "Delete selected"
-                    }) {
-                        Label("Delete", systemImage: "trash")
-                            .foregroundColor(.red)
-                    }
+        ZStack {
+            VStack(spacing: 20) {
+                // Button to show Alert
+                Button("Show Alert") {
+                    showAlert = true
                 }
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("Important Message"),
+                        message: Text("This is an alert!"),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+
+                // Button to show Custom Modal
+                Button("Show Custom Modal") {
+                    showCustomModal = true
+                }
+
+                // Text with Context Menu
+                Text("Long press me for options")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+                    .contextMenu {
+                        Button(action: {
+                            contextMenuAction = "Copy selected"
+                        }) {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        }
+
+                        Button(action: {
+                            contextMenuAction = "Share selected"
+                        }) {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+
+                        Button(action: {
+                            contextMenuAction = "Delete selected"
+                        }) {
+                            Label("Delete", systemImage: "trash")
+                                .foregroundColor(.red)
+                        }
+                    }
+
+                // Display the selected context menu action
+                Text("Last action: \(contextMenuAction)")
+                    .padding()
+            }
+            .padding()
+
+            // Custom Modal
+            if showCustomModal {
+                Color.black.opacity(0.4)
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        showCustomModal = false
+                    }
+
+                CustomModalView(
+                    title: "Confirmation",
+                    message: "Are you sure you want to proceed?",
+                    onYes: {
+                        print("Yes button tapped")
+                        showCustomModal = false
+                    },
+                    onNo: {
+                        print("No button tapped")
+                        showCustomModal = false
+                    }
+                )
+                .transition(.opacity) // Add a transition animation
+            }
         }
-        .padding()
+        .animation(.easeOut(duration: 0.2), value: showCustomModal) // Animate the modal appearance
     }
 }
 
-// Modal View
+// Custom Modal View
+struct CustomModalView: View {
+    var title: String
+    var message: String
+    var onYes: () -> Void
+    var onNo: () -> Void
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text(title)
+                .font(.title)
+                .fontWeight(.bold)
+
+            Text(message)
+                .font(.body)
+                .multilineTextAlignment(.center)
+
+            HStack(spacing: 20) {
+                Button(action: onNo) {
+                    Text("No")
+                        .font(.headline)
+                        .padding()
+                        .frame(width: 100)
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+
+                Button(action: onYes) {
+                    Text("Yes")
+                        .font(.headline)
+                        .padding()
+                        .frame(width: 100)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+            }
+        }
+        .padding()
+//        .frame(width: 300)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(radius: 20)
+    }
+}
+
+// Modal View (for the sheet)
 struct ModalView: View {
-    @Binding var isPresented: Bool //alternate
-    @Environment(\.dismiss) var dismiss
     var body: some View {
         VStack {
             Text("This is a modal view!")
@@ -76,9 +148,8 @@ struct ModalView: View {
                 .padding()
 
             Button("Dismiss") {
-//                isPresented = false //alternate
-                dismiss()
-                
+                // Dismiss the modal
+                // This is handled automatically by the `sheet` modifier
             }
             .padding()
         }
@@ -90,4 +161,3 @@ struct Example3View_Previews: PreviewProvider {
         Example3View()
     }
 }
-
