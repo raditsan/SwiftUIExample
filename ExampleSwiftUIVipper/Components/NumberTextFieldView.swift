@@ -217,14 +217,59 @@
 
 import SwiftUI
 
-struct NumberTextFieldView: UIViewRepresentable {
+struct NumberTextFieldView: View {
+    var placeholder: String
+    @Binding var text: String
+    var groupingSeparator: Character
+    var decimalSeparator: Character
+    private var onValueChange: ((String) -> Void)? = nil
+
+    init(text: Binding<String>, placeholder: String = "Enter your amount", groupingSeparator: Character = ",", decimalSeparator: Character = ".") {
+        self._text = text
+        self.groupingSeparator = groupingSeparator
+        self.decimalSeparator = decimalSeparator
+        self.placeholder = placeholder
+    }
+    
+    var body: some View {
+        ZStack(alignment: .leading) {
+            // Placeholder
+            if text.isEmpty {
+                Text(placeholder)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal, 15)
+            }
+            
+            // TextField
+            _NumberTextFieldView(text: $text)
+                .onValueChanged(onValueChange)
+                .padding(.leading, 15)
+                .padding(.trailing, 15)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray, lineWidth: 1)
+                )
+                .foregroundColor(.black)
+                .frame(height: 40)
+        }
+        
+    }
+    
+    func onValueChanged(_ handler: @escaping (String) -> Void) -> Self {
+        var copy = self
+        copy.onValueChange = handler
+        return copy
+    }
+}
+
+struct _NumberTextFieldView: UIViewRepresentable {
     @Binding var text: String
     @State private var cursorPosition: Int = 0
     var groupingSeparator: Character
     var decimalSeparator: Character
     private var onValueChange: ((String) -> Void)? = nil
 
-    init(text: Binding<String>, groupingSeparator: Character = ",", decimalSeparator: Character = ".") {
+    init(text: Binding<String>, placeholder: String = "Enter your text", groupingSeparator: Character = ",", decimalSeparator: Character = ".") {
         self._text = text
         self.groupingSeparator = groupingSeparator
         self.decimalSeparator = decimalSeparator
@@ -318,14 +363,14 @@ struct NumberTextFieldView: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, UITextFieldDelegate {
-        var parent: NumberTextFieldView
+        var parent: _NumberTextFieldView
         var decimalSeparator: String {
             return String(parent.decimalSeparator)
         }
         var groupingSeparator: String {
             return String(parent.groupingSeparator)
         }
-        init(_ parent: NumberTextFieldView) {
+        init(_ parent: _NumberTextFieldView) {
             self.parent = parent
         }
         
@@ -377,6 +422,8 @@ struct NumberTextFieldView: UIViewRepresentable {
                 guard let currentText = textField.text as NSString? else { return false }
                 if string == decimalSeparator && currentText.contains(decimalSeparator) {
                     return false
+                } else if currentText == "" && [decimalSeparator, groupingSeparator].contains(string) {
+                    return false
                 }
                 let newText = currentText.replacingCharacters(in: range, with: string)
                 let numericString = parent.replacingExpression(newText)
@@ -400,10 +447,11 @@ struct NumberTextFieldView: UIViewRepresentable {
     }
 }
 
-extension NumberTextFieldView {
-    func onValueChanged(_ handler: @escaping (String) -> Void) -> Self {
+extension _NumberTextFieldView {
+    func onValueChanged(_ handler: ((String) -> Void)?) -> Self {
         var copy = self
         copy.onValueChange = handler
         return copy
     }
 }
+

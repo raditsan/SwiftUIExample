@@ -19,5 +19,6 @@ class Modules {
         HomeItemEntity(name: "Example 8: Select Option Component", destination: AnyView(Example8View())),
         HomeItemEntity(name: "Example 9: Checkbox Component", destination: AnyView(Example9View())),
         HomeItemEntity(name: "Example 10: Number TextField Component", destination: AnyView(Example10View())),
+        HomeItemEntity(name: "Example 11: Mvvm Moya request", destination: AnyView(Example11View())),
     ]
 }
