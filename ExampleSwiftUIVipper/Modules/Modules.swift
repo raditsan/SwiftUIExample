@@ -18,5 +18,6 @@ class Modules {
         HomeItemEntity(name: "Example 7: Local Notification", destination: AnyView(Example7View())),
         HomeItemEntity(name: "Example 8: Select Option Component", destination: AnyView(Example8View())),
         HomeItemEntity(name: "Example 9: Checkbox Component", destination: AnyView(Example9View())),
+        HomeItemEntity(name: "Example 10: Number TextField Component", destination: AnyView(Example10View())),
     ]
 }
