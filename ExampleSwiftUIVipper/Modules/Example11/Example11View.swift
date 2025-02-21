@@ -84,10 +84,10 @@ struct AddUserView: View {
             Form {
                 Section(header: Text("User Details")) {
                     TextField("Name", text: name)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+//                        .textFieldStyle(RoundedBorderTextFieldStyle())
                     
                     TextField("Email", text: email)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+//                        .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.emailAddress)
                 }
             }

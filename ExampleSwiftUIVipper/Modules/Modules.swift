@@ -20,5 +20,10 @@ class Modules {
         HomeItemEntity(name: "Example 9: Checkbox Component", destination: AnyView(Example9View())),
         HomeItemEntity(name: "Example 10: Number TextField Component", destination: AnyView(Example10View())),
         HomeItemEntity(name: "Example 11: Mvvm Moya request", destination: AnyView(Example11View())),
+        HomeItemEntity(name: "Example 12: Grid View", destination: AnyView(Example12View())),
+        HomeItemEntity(name: "Example 13: Morp, FullScreen", destination: AnyView(Example13View())),
+        HomeItemEntity(name: "Example 14: GeometryReader", destination: AnyView(Example14View())),
+        HomeItemEntity(name: "Example 15: Atom Design", destination: AnyView(Example15View())),
+        HomeItemEntity(name: "Example 16: Animation", destination: AnyView(Example16View())),
     ]
 }
